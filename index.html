@@ -3,97 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parte C - Celda de Manufactura Industrial con Primitivas</title>
+  <title>Parte D - Integración Modelo CAD (XR Multiplataforma)</title>
 
   <!-- Librería A-Frame v1.4.1 -->
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.1/dist/aframe-master.min.js"></script>
 </head>
 <body>
   <a-scene visual-filtering>
-    
-    <!-- CIELO Y ENTORNO -->
+
+    <!-- ======================================================= -->
+    <!-- PARTE D: CARGA DE RECURSOS (a-assets)                  -->
+    <!-- ======================================================= -->
+    <a-assets>
+      <!-- Definición del recurso GLB -->
+      <a-asset-item id="modeloIndustrial" src="models/modelo.glb"></a-asset-item>
+    </a-assets>
+
+    <!-- CIELO Y PISO INDUSTRIAL -->
     <a-sky color="#B0BEC5"></a-sky>
-
-    <!-- 1. PISO INDUSTRIAL Y ZONA DE SEGURIDAD (a-plane) -->
-    <!-- Piso general de la fábrica -->
     <a-plane position="0 0 0" rotation="-90 0 0" width="20" height="20" color="#37474F"></a-plane>
-    <!-- Borde amarillo de área delimitada de seguridad -->
-    <a-plane position="0 0.01 -2" rotation="-90 0 0" width="7" height="5" color="#FBC02D"></a-plane>
-    <!-- Interior del área de trabajo -->
-    <a-plane position="0 0.02 -2" rotation="-90 0 0" width="6.6" height="4.6" color="#455A64"></a-plane>
-
 
     <!-- ======================================================= -->
-    <!-- ENTIDAD PADRE: CELDA DE MANUFACTURA (JERARQUÍA ESPACIAL) -->
+    <!-- PARTE C: CELDA DE MANUFACTURA CON PRIMITIVAS           -->
     <!-- ======================================================= -->
-    <a-entity id="celda-manufactura" position="0 0 -2">
+    <a-entity id="celda-primitivas" position="-2.5 0 -3">
+      <!-- Tanque de almacenamiento -->
+      <a-cylinder position="0 1.5 0" radius="0.6" height="2" color="#0288D1" opacity="0.85"></a-cylinder>
+      <a-sphere position="0 2.5 0" radius="0.6" color="#0277BD"></a-sphere>
+      <!-- Banda transportadora -->
+      <a-box position="1.5 0.5 0" width="2" height="0.1" depth="0.8" color="#546E7A"></a-box>
+      <a-box position="1.5 0.65 0" width="0.3" height="0.2" depth="0.3" color="#FB8C00"></a-box>
+    </a-entity>
 
-      <!-- ========================================= -->
-      <!-- SUB-ENSAMBLAJE 1: BANDA TRANSPORTADORA    -->
-      <!-- ========================================= -->
-      <a-entity id="banda-transportadora" position="-1.8 0 0">
-        <!-- Patas de soporte (a-cylinder) -->
-        <a-cylinder position="-0.3 0.4 -1" radius="0.04" height="0.8" color="#212121"></a-cylinder>
-        <a-cylinder position="0.3 0.4 -1" radius="0.04" height="0.8" color="#212121"></a-cylinder>
-        <a-cylinder position="-0.3 0.4 1" radius="0.04" height="0.8" color="#212121"></a-cylinder>
-        <a-cylinder position="0.3 0.4 1" radius="0.04" height="0.8" color="#212121"></a-cylinder>
-
-        <!-- Estructura del marco (a-box) -->
-        <a-box position="0 0.8 0" width="0.8" height="0.15" depth="2.5" color="#546E7A"></a-box>
-        <!-- Cinta en movimiento (a-box) -->
-        <a-box position="0 0.89 0" width="0.7" height="0.03" depth="2.4" color="#111111"></a-box>
-
-        <!-- Cargas o piezas sobre la banda (a-box) -->
-        <a-box position="0 1.05 -0.6" width="0.3" height="0.25" depth="0.3" color="#FB8C00"></a-box>
-        <a-box position="0 1.05 0.4" width="0.3" height="0.25" depth="0.3" color="#FB8C00"></a-box>
-      </a-entity>
-
-      <!-- ========================================= -->
-      <!-- SUB-ENSAMBLAJE 2: TANQUE DE ALMACENAMIENTO-->
-      <!-- ========================================= -->
-      <a-entity id="tanque-almacenamiento" position="1.8 0 -0.3">
-        <!-- Soportes inferiores (a-cylinder) -->
-        <a-cylinder position="-0.5 0.5 -0.5" radius="0.05" height="1" color="#424242"></a-cylinder>
-        <a-cylinder position="0.5 0.5 -0.5" radius="0.05" height="1" color="#424242"></a-cylinder>
-        <a-cylinder position="-0.5 0.5 0.5" radius="0.05" height="1" color="#424242"></a-cylinder>
-        <a-cylinder position="0.5 0.5 0.5" radius="0.05" height="1" color="#424242"></a-cylinder>
-
-        <!-- Cuerpo del Tanque (a-cylinder) con transparencia -->
-        <a-cylinder position="0 2 0" radius="0.75" height="2" color="#0288D1" opacity="0.85"></a-cylinder>
-        <!-- Cúpulas del tanque (a-sphere) -->
-        <a-sphere position="0 3 0" radius="0.75" color="#0277BD"></a-sphere>
-        <a-sphere position="0 1 0" radius="0.75" color="#0277BD"></a-sphere>
-
-        <!-- Tubería de salida (a-cylinder) -->
-        <a-cylinder position="-0.75 1.5 0" rotation="0 0 90" radius="0.08" height="1.2" color="#B0BEC5"></a-cylinder>
-
-        <!-- Sensor de Nivel en el domo (a-sphere) -->
-        <a-sphere id="sensor-nivel" position="0 3.8 0" radius="0.12" color="#4CAF50"></a-sphere>
-      </a-entity>
-
-      <!-- ========================================= -->
-      <!-- SUB-ENSAMBLAJE 3: PANEL Y TORRE DE CONTROL-->
-      <!-- ========================================= -->
-      <a-entity id="panel-control" position="0 0 -1.3">
-        <!-- Pedestal base (a-box) -->
-        <a-box position="0 0.6 0" width="0.4" height="1.2" depth="0.4" color="#37474F"></a-box>
-        <!-- Pantalla HMI inclinado (a-box) -->
-        <a-box position="0 1.25 0.05" rotation="-20 0 0" width="0.6" height="0.4" depth="0.08" color="#1E88E5"></a-box>
-        <!-- Botón de Paro de Emergencia (a-cylinder) -->
-        <a-cylinder position="0.18 1.2 0.12" rotation="70 0 0" radius="0.04" height="0.04" color="#E53935"></a-cylinder>
-
-        <!-- Torreta de señalización tipo semáforo (a-cylinder + a-sphere) -->
-        <a-cylinder position="-0.22 1.55 0" radius="0.02" height="0.3" color="#212121"></a-cylinder>
-        <a-sphere position="-0.22 1.73 0" radius="0.07" color="#4CAF50"></a-sphere>
-      </a-entity>
-
+    <!-- ======================================================= -->
+    <!-- PARTE D: INTEGRACIÓN DEL MODELO CAD EXTERNO (.GLB)     -->
+    <!-- ======================================================= -->
+    <!-- Ajusta position, scale y rotation según las dimensiones de tu modelo -->
+    <a-entity 
+      gltf-model="#modeloIndustrial" 
+      position="2 0 -3" 
+      rotation="0 -30 0" 
+      scale="1 1 1">
     </a-entity>
 
 
-    <!-- CÁMARA Y CONTROLES BÁSICOS (Vista inicial ajustada) -->
-    <a-entity position="0 1.6 2.5">
-      <a-camera look-controls wasd-controls></a-camera>
+    <!-- ======================================================= -->
+    <!-- CÁMARA Y CONTROLES (PC, MÓVIL Y VR)                    -->
+    <!-- ======================================================= -->
+    <a-entity position="0 1.6 1">
+      <a-camera look-controls wasd-controls>
+        <!-- Retícula/Cursor para interacción con la mirada o clic -->
+        <a-cursor color="#FF5722" raycaster="objects: .interactivo"></a-cursor>
+      </a-camera>
     </a-entity>
+
+    <!-- Controles tipo rayo láser para Meta Quest u otros visores VR -->
+    <a-entity laser-controls="hand: right"></a-entity>
+    <a-entity laser-controls="hand: left"></a-entity>
 
   </a-scene>
 </body>
