@@ -3,61 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parte D - Integración Modelo CAD (XR Multiplataforma)</title>
+  <title>Laboratorio XR - Entorno Industrial Multiplataforma</title>
 
-  <!-- Librería A-Frame v1.4.1 -->
+  <!-- PARTE A: Importación de la librería A-Frame v1.4.1 -->
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.1/dist/aframe-master.min.js"></script>
 </head>
 <body>
   <a-scene visual-filtering>
 
     <!-- ======================================================= -->
-    <!-- PARTE D: CARGA DE RECURSOS (a-assets)                  -->
+    <!-- PARTE D: Carga de Assets (Modelo CAD exportado)         -->
     <!-- ======================================================= -->
     <a-assets>
-      <!-- Definición del recurso GLB -->
-      <a-asset-item id="modeloIndustrial" src="models/modelo.glb"></a-asset-item>
+      <!-- Asegúrate de tener tu archivo en la ruta: models/modelo.glb -->
+      <a-asset-item id="modeloCAD" src="models/modelo.glb"></a-asset-item>
     </a-assets>
 
-    <!-- CIELO Y PISO INDUSTRIAL -->
+    <!-- ENTORNO Y PISO INDUSTRIAL -->
     <a-sky color="#B0BEC5"></a-sky>
+    <!-- Piso principal de la fábrica -->
     <a-plane position="0 0 0" rotation="-90 0 0" width="20" height="20" color="#37474F"></a-plane>
+    <!-- Delimitación de área de trabajo/seguridad -->
+    <a-plane position="0 0.01 -2" rotation="-90 0 0" width="8" height="6" color="#FBC02D"></a-plane>
+    <a-plane position="0 0.02 -2" rotation="-90 0 0" width="7.6" height="5.6" color="#455A64"></a-plane>
 
     <!-- ======================================================= -->
-    <!-- PARTE C: CELDA DE MANUFACTURA CON PRIMITIVAS           -->
+    <!-- PARTE C: Modelo Industrial con Primitivas               -->
+    <!-- (Jerarquía espacial usando a-entity como contenedor)    -->
     <!-- ======================================================= -->
-    <a-entity id="celda-primitivas" position="-2.5 0 -3">
-      <!-- Tanque de almacenamiento -->
-      <a-cylinder position="0 1.5 0" radius="0.6" height="2" color="#0288D1" opacity="0.85"></a-cylinder>
-      <a-sphere position="0 2.5 0" radius="0.6" color="#0277BD"></a-sphere>
-      <!-- Banda transportadora -->
-      <a-box position="1.5 0.5 0" width="2" height="0.1" depth="0.8" color="#546E7A"></a-box>
-      <a-box position="1.5 0.65 0" width="0.3" height="0.2" depth="0.3" color="#FB8C00"></a-box>
+    <a-entity id="celda-primitivas" position="-2 0 -2">
+
+      <!-- Sub-ensamblaje 1: Tanque de Almacenamiento -->
+      <a-entity id="tanque-grupo" position="-1 0 0">
+        <a-cylinder position="0 1.25 0" radius="0.6" height="2.5" color="#0288D1" opacity="0.85"></a-cylinder>
+        <a-sphere position="0 2.5 0" radius="0.6" color="#0277BD"></a-sphere>
+        <a-sphere position="0 3.2 0" radius="0.1" color="#4CAF50"></a-sphere> <!-- Sensor -->
+      </a-entity>
+
+      <!-- Sub-ensamblaje 2: Banda Transportadora -->
+      <a-entity id="banda-grupo" position="1 0 0">
+        <a-box position="0 0.5 0" width="0.8" height="0.1" depth="2.5" color="#546E7A"></a-box>
+        <a-box position="0 0.56 0" width="0.7" height="0.02" depth="2.4" color="#111111"></a-box>
+        <!-- Cargas/Cajas sobre la banda -->
+        <a-box position="0 0.75 -0.5" width="0.3" height="0.3" depth="0.3" color="#FB8C00"></a-box>
+        <a-box position="0 0.75 0.5" width="0.3" height="0.3" depth="0.3" color="#FB8C00"></a-box>
+      </a-entity>
+
+      <!-- Sub-ensamblaje 3: Panel de Control -->
+      <a-entity id="panel-grupo" position="0 0 -1">
+        <a-box position="0 0.6 0" width="0.3" height="1.2" depth="0.3" color="#37474F"></a-box>
+        <a-box position="0 1.2 0.05" rotation="-20 0 0" width="0.5" height="0.3" depth="0.05" color="#1E88E5"></a-box>
+        <a-cylinder position="0.15 1.15 0.1" rotation="70 0 0" radius="0.03" height="0.03" color="#E53935"></a-cylinder>
+      </a-entity>
+
     </a-entity>
 
     <!-- ======================================================= -->
-    <!-- PARTE D: INTEGRACIÓN DEL MODELO CAD EXTERNO (.GLB)     -->
+    <!-- PARTE D: Integración del Modelo CAD Externo (.GLB)     -->
     <!-- ======================================================= -->
-    <!-- Ajusta position, scale y rotation según las dimensiones de tu modelo -->
+    <!-- Se incrementó la escala a 20x20x20 para que sea visible -->
     <a-entity 
-      gltf-model="#modeloIndustrial" 
-      position="2 0 -3" 
+      gltf-model="#modeloCAD" 
+      position="2 0 -2" 
       rotation="0 -30 0" 
-      scale="1 1 1">
+      scale="20 20 20">
     </a-entity>
 
-
     <!-- ======================================================= -->
-    <!-- CÁMARA Y CONTROLES (PC, MÓVIL Y VR)                    -->
+    <!-- PARTE B: Cámara y Controles Multiplataforma             -->
     <!-- ======================================================= -->
-    <a-entity position="0 1.6 1">
+    <!-- Cámara principal con controles WASD (teclado) y mirar (mouse/móvil) -->
+    <a-entity position="0 1.6 2">
       <a-camera look-controls wasd-controls>
-        <!-- Retícula/Cursor para interacción con la mirada o clic -->
+        <!-- Retícula/Cursor fija en pantalla para interacciones por mirada o clic -->
         <a-cursor color="#FF5722" raycaster="objects: .interactivo"></a-cursor>
       </a-camera>
     </a-entity>
 
-    <!-- Controles tipo rayo láser para Meta Quest u otros visores VR -->
+    <!-- Controles VR con rayo láser para Meta Quest u otros visores -->
     <a-entity laser-controls="hand: right"></a-entity>
     <a-entity laser-controls="hand: left"></a-entity>
 
