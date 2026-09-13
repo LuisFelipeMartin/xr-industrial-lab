@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,11 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Laboratorio XR - Entorno Industrial Multiplataforma</title>
 
-  <!-- PARTE A: Actualizamos a A-Frame v1.5.0 para mejor compatibilidad WebXR en Android -->
+  <!-- PARTE A: Actualizamos a A-Frame v1.5.0 para mejor compatibilidad WebXR -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 </head>
 <body>
-  <a-scene>
+  
+  <!-- Restauramos la UI de permisos de iOS y forzamos la interfaz XR para que aparezca el botón VR -->
+  <a-scene 
+    device-orientation-permission-ui="enabled: true" 
+    xr-mode-ui="enabled: true">
 
     <!-- ======================================================= -->
     <!-- PARTE D: CARGA DE RECURSOS (a-assets)                  -->
@@ -56,7 +61,7 @@
     </a-entity>
 
     <!-- ======================================================= -->
-    <!-- CÁMARA Y CONTROLES BÁSICOS (Simplificado para evitar conflictos) -->
+    <!-- CÁMARA Y CONTROLES BÁSICOS                              -->
     <!-- ======================================================= -->
     <!-- Al usar a-camera directamente, A-Frame inyecta WebXR de forma nativa -->
     <a-camera position="0 1.6 2">
