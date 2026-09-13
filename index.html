@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <!-- Viewport bloqueado para evitar zooms accidentales en navegadores móviles -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Laboratorio XR - Entorno Industrial Multiplataforma</title>
 
@@ -10,7 +9,10 @@
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.1/dist/aframe-master.min.js"></script>
 </head>
 <body>
-  <a-scene loading-screen="dotsColor: red; backgroundColor: black">
+  <!-- device-orientation-permission-ui activa el botón para autorizar el giroscopio en móviles -->
+  <a-scene 
+    device-orientation-permission-ui="enabled: true" 
+    loading-screen="dotsColor: red; backgroundColor: black">
 
     <!-- ======================================================= -->
     <!-- PARTE D: CARGA DE RECURSOS (a-assets)                  -->
@@ -47,7 +49,7 @@
     </a-entity>
 
     <!-- ======================================================= -->
-    <!-- PARTE D: MODELO CAD (Coordenadas y escala ajustadas)   -->
+    <!-- PARTE D: MODELO CAD (Coordenadas ajustadas)             -->
     <!-- ======================================================= -->
     <a-entity 
       gltf-model="#modeloCAD" 
@@ -57,18 +59,17 @@
     </a-entity>
 
     <!-- ======================================================= -->
-    <!-- CÁMARA Y CONTROLES ADAPTADOS A MÓVIL Y DESK/VR          -->
+    <!-- CÁMARA CONFIGURADA PARA GIROSCOPIO MÓVIL Y VR           -->
     <!-- ======================================================= -->
     <a-entity position="0 1.6 2">
       <a-camera 
         look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true" 
         wasd-controls="acceleration: 20">
-        <!-- Cursor para interacción en móvil y escritorio -->
         <a-cursor color="#FF5722" raycaster="objects: .interactivo"></a-cursor>
       </a-camera>
     </a-entity>
 
-    <!-- Controles VR -->
+    <!-- Controles VR para visores dedicados -->
     <a-entity laser-controls="hand: right"></a-entity>
     <a-entity laser-controls="hand: left"></a-entity>
 
