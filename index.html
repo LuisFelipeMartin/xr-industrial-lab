@@ -10,14 +10,14 @@
 </head>
 <body>
   
-  <!-- Botón personalizado para forzar la entrada a VR en iOS -->
-  <button id="boton-vr-forzado" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 15px 25px; background-color: #FF5722; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.3);">
+  <!-- Botón personalizado con un ID simplificado -->
+  <button id="boton-vr" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 15px 25px; background-color: #FF5722; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; box-shadow: 0px 4px 6px rgba(0,0,0,0.3);">
     ENTRAR A VR
   </button>
 
   <a-scene 
     device-orientation-permission-ui="enabled: true"
-    vr-mode-ui="enabled: false"> <!-- Ocultamos el nativo que falla para usar el nuestro -->
+    vr-mode-ui="enabled: false"> <!-- Ocultamos la interfaz nativa -->
 
     <!-- ======================================================= -->
     <!-- PARTE D: CARGA DE RECURSOS                              -->
@@ -67,7 +67,8 @@
     <!-- CÁMARA Y CONTROLES                                      -->
     <!-- ======================================================= -->
     <a-camera position="0 1.6 2">
-      <a-cursor color="#FF5722"></a-cursor>
+      <!-- Cursor cambiado a color negro o blanco para evitar confusión con el botón -->
+      <a-cursor color="#FFFFFF"></a-cursor>
     </a-camera>
 
     <a-entity laser-controls="hand: right"></a-entity>
@@ -75,23 +76,45 @@
 
   </a-scene>
 
-  <!-- Script que conecta nuestro botón con el motor de VR de A-Frame -->
+  <!-- Script que gestiona la entrada/salida de VR y reubica el botón -->
   <script>
-    document.querySelector('#boton-vr-forzado').addEventListener('click', function() {
-      var scene = document.querySelector('a-scene');
-      
-      // Solicita permiso en iOS antes de entrar a VR
-      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-          .then(permissionState => {
-            if (permissionState === 'granted') {
-              scene.enterVR(); // Forza la pantalla dividida
-            }
-          })
-          .catch(console.error);
+    var boton = document.querySelector('#boton-vr');
+    var escena = document.querySelector('a-scene');
+
+    boton.addEventListener('click', function() {
+      // Si la escena ya está en VR, al hacer clic la sacamos
+      if (escena.is('vr-mode')) {
+        escena.exitVR();
       } else {
-        scene.enterVR();
+        // Si no está en VR, pedimos permiso y entramos
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+              if (permissionState === 'granted') {
+                escena.enterVR();
+              }
+            })
+            .catch(console.error);
+        } else {
+          escena.enterVR();
+        }
       }
+    });
+
+    // Escuchamos cuando la escena entra a VR para cambiar el diseño del botón
+    escena.addEventListener('enter-vr', function () {
+      boton.innerText = 'SALIR DE VR';
+      boton.style.left = '20px'; // Lo movemos a la esquina inferior izquierda
+      boton.style.transform = 'none'; // Quitamos el centrado
+      boton.style.backgroundColor = '#d32f2f'; // Cambiamos el color a rojo para distinguirlo
+    });
+
+    // Escuchamos cuando sale de VR para regresarlo a la normalidad
+    escena.addEventListener('exit-vr', function () {
+      boton.innerText = 'ENTRAR A VR';
+      boton.style.left = '50%'; // Lo regresamos al centro
+      boton.style.transform = 'translateX(-50%)'; // Restauramos el centrado
+      boton.style.backgroundColor = '#FF5722'; // Volvemos al color original
     });
   </script>
 </body>
