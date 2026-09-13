@@ -7,9 +7,23 @@
 
   <!-- Importación de A-Frame v1.4.1 -->
   <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.1/dist/aframe-master.min.js"></script>
+
+  <!-- Script para forzar la activación de sensores giroscópicos en Android/Móviles al primer toque -->
+  <script>
+    window.addEventListener('touchstart', function () {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+          .then(permissionState => {
+            if (permissionState === 'granted') {
+              window.dispatchEvent(new Event('deviceorientation'));
+            }
+          })
+          .catch(console.error);
+      }
+    }, { once: true });
+  </script>
 </head>
 <body>
-  <!-- device-orientation-permission-ui activa el botón para autorizar el giroscopio en móviles -->
   <a-scene 
     device-orientation-permission-ui="enabled: true" 
     loading-screen="dotsColor: red; backgroundColor: black">
@@ -49,7 +63,7 @@
     </a-entity>
 
     <!-- ======================================================= -->
-    <!-- PARTE D: MODELO CAD (Coordenadas ajustadas)             -->
+    <!-- PARTE D: MODELO CAD                                     -->
     <!-- ======================================================= -->
     <a-entity 
       gltf-model="#modeloCAD" 
@@ -59,7 +73,7 @@
     </a-entity>
 
     <!-- ======================================================= -->
-    <!-- CÁMARA CONFIGURADA PARA GIROSCOPIO MÓVIL Y VR           -->
+    <!-- CÁMARA Y CONTROLES CONFIGURADOS PARA MÓVIL              -->
     <!-- ======================================================= -->
     <a-entity position="0 1.6 2">
       <a-camera 
@@ -69,7 +83,7 @@
       </a-camera>
     </a-entity>
 
-    <!-- Controles VR para visores dedicados -->
+    <!-- Controles VR para visores -->
     <a-entity laser-controls="hand: right"></a-entity>
     <a-entity laser-controls="hand: left"></a-entity>
 
